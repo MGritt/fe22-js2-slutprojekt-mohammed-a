@@ -2,7 +2,6 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, doc, deleteDoc, setDoc, addDoc, getDocs, orderBy, query } from 'firebase/firestore';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, deleteUser, UserCredential, User, updateProfile } from 'firebase/auth';
 
-// Firebase app initialization
 const firebaseConfig = {
   apiKey: "AIzaSyDiIjPU9LYag_w_Ictyyf9Jjtplr07iBoI",
   authDomain: "social-529c9.firebaseapp.com",
@@ -14,16 +13,13 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-// Get Firestore and Auth references
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-// Login function
 const login = async (email: string, password: string) => {
   try {
     const userCredential: UserCredential = await signInWithEmailAndPassword(auth, email, password);
     const user: User = userCredential.user;
-    // handle successful login
     console.log('logged in?');
     const loginWrapper = document.querySelector('#loginWrapper');
     loginWrapper.innerHTML = '';
@@ -37,10 +33,8 @@ const login = async (email: string, password: string) => {
   const users = await loadAllUsers();
   displayUserEmails(users);
 
-    // Function to create a new message
     const createMessage = async (message: string) => {
       try {
-        // Add a new document to the 'messages' collection
         const messageRef = collection(db, auth.currentUser?.uid);
         await addDoc(messageRef, {
           message: message,
@@ -50,24 +44,20 @@ const login = async (email: string, password: string) => {
           timestamp: new Date()
         });
 
-        // Display all messages
         displayMessages();
       } catch (error) {
         console.error('Error adding document: ', error);
       }
     };
 
-    // Function to display all messages
     const displayMessages = async () => {
       try {
         const messagesRef = collection(db, auth.currentUser?.uid);
         const querySnapshot = await getDocs(query(messagesRef, orderBy('timestamp', 'desc')));
 
-        // Clear previous messages
         const messagesDiv = document.querySelector('#messages');
         messagesDiv.innerHTML = '';
 
-        // Loop through all documents and display them
         querySnapshot.forEach((doc) => {
           const data = doc.data();
           const messageDiv = document.createElement('div');
@@ -84,7 +74,6 @@ const login = async (email: string, password: string) => {
       }
     };
 
-    // Create post form
     const postForm = document.createElement('form');
     postForm.id = 'postForm';
     postForm.addEventListener('submit', (event) => {
@@ -107,76 +96,153 @@ const login = async (email: string, password: string) => {
     postForm.appendChild(messageInput);
     postForm.appendChild(submitButton);
 
-    // Create messages container
+
     const messagesContainer = document.createElement('div');
     messagesContainer.id = 'messages';
 
-    // Create main container and add elements
     const mainContainer = document.createElement('div');
     mainContainer.id = 'mainContainer';
     mainContainer.appendChild(postForm);
     mainContainer.appendChild(messagesContainer);
 
-    // Add main container to body
     document.body.appendChild(mainContainer);
 
-    // Display all messages by default
     displayMessages();
 
 
   } catch (error) {
-    // handle login error
     console.log('fail in?');
   }
 };
 
-// Sign up function
+
 const signUp = async (email: string, password: string, pic: number) => {
   try {
     const userCredential: UserCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user: User = userCredential.user;
     console.log(pic);
-    // add user data to Firestore
     await setDoc(doc(collection(db, 'users'), user.uid), {
       email: user.email,
       uid: user.uid
     });
 
-    // Update the user profile with photoURL
     await updateProfile(userCredential.user, {
       photoURL: `/images/${pic}.png`
     });
 
-    // handle successful sign up
   } catch (error) {
-    // handle sign up error
   }
 };
 
-// Logout function
 const logout = async () => {
   try {
     await signOut(auth);
-    // handle successful logout
   } catch (error) {
-    // handle logout error
   }
 };
 
-// Function to run if user is already signed in
+
 const userIsSignedIn = () => {
-  // Add your code here
+  const user: User = userCredential.user;
+  console.log('logged in?');
+  const loginWrapper = document.querySelector('#loginWrapper');
+  loginWrapper.innerHTML = '';
+  console.log(auth.currentUser);
+  const loggedAs = document.querySelector('#loggedIn');
+  loggedAs.innerText = 'logged in as '+auth.currentUser?.email;
+  profilePicture = document.createElement('img');
+  profilePicture.src = auth.currentUser?.photoURL;
+  loggedAs.append(profilePicture);
+
+const users = await loadAllUsers();
+displayUserEmails(users);
+
+  const createMessage = async (message: string) => {
+    try {
+      const messageRef = collection(db, auth.currentUser?.uid);
+      await addDoc(messageRef, {
+        message: message,
+        userEmail: auth.currentUser?.email,
+        userId: auth.currentUser?.uid,
+        userImage: auth.currentUser?.photoURL,
+        timestamp: new Date()
+      });
+
+      displayMessages();
+    } catch (error) {
+      console.error('Error adding document: ', error);
+    }
+  };
+
+  const displayMessages = async () => {
+    try {
+      const messagesRef = collection(db, auth.currentUser?.uid);
+      const querySnapshot = await getDocs(query(messagesRef, orderBy('timestamp', 'desc')));
+
+      const messagesDiv = document.querySelector('#messages');
+      messagesDiv.innerHTML = '';
+
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message');
+        messageDiv.innerHTML = `
+        <img src=${data.userImage}></img>
+          <p>${data.message}</p>
+          <p>Posted by: ${data.userEmail}</p>
+        `;
+        messagesDiv.appendChild(messageDiv);
+      });
+    } catch (error) {
+      console.error('Error getting documents: ', error);
+    }
+  };
+
+  // Create post form
+  const postForm = document.createElement('form');
+  postForm.id = 'postForm';
+  postForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const messageInput = document.querySelector('#messageInput');
+    const message = messageInput.value.trim();
+    createMessage(message);
+    messageInput.value = '';
+  });
+
+  const messageInput = document.createElement('input');
+  messageInput.type = 'text';
+  messageInput.id = 'messageInput';
+  messageInput.name = 'message';
+
+  const submitButton = document.createElement('button');
+  submitButton.type = 'submit';
+  submitButton.textContent = 'Post';
+
+  postForm.appendChild(messageInput);
+  postForm.appendChild(submitButton);
+
+
+  const messagesContainer = document.createElement('div');
+  messagesContainer.id = 'messages';
+
+  const mainContainer = document.createElement('div');
+  mainContainer.id = 'mainContainer';
+  mainContainer.appendChild(postForm);
+  mainContainer.appendChild(messagesContainer);
+
+  document.body.appendChild(mainContainer);
+
+  displayMessages();
+
 };
 
-// Check if user is already signed in
+
 auth.onAuthStateChanged((user) => {
   if (user) {
-    // User is signed in, call userIsSignedIn function
     userIsSignedIn();
   }
 });
 
-// Add event listeners to login and sign up forms
 const loginForm = document.querySelector('#log');
 const signUpForm = document.querySelector('#sign');
 const profilePic = signUpForm.querySelectorAll('input[type="radio"]');
@@ -230,7 +296,7 @@ function displayUserEmails(users: Array<{ email: string }>) {
     userList.appendChild(listItem);
   });
 
-  // Append the user list to a container in the DOM
+
   const container = document.querySelector('#container');
   container.appendChild(userList);
   addUserEventListeners();
@@ -241,11 +307,9 @@ const displayUserProfile = async (uid: string) => {
     const messagesRef = collection(db, uid);
     const querySnapshot = await getDocs(query(messagesRef, orderBy('timestamp', 'desc')));
 
-    // Clear previous messages
     const messagesDiv = document.querySelector('#messages');
     messagesDiv.innerHTML = '';
 
-    // Loop through all documents and display them
     querySnapshot.forEach((doc) => {
       const data = doc.data();
       const messageDiv = document.createElement('div');
@@ -273,7 +337,6 @@ function addUserEventListeners() {
   });
 }
 
-// Function to delete the user's account
 async function deleteAccount() {
   try {
     const currentUser = auth.currentUser;
@@ -292,6 +355,5 @@ async function deleteAccount() {
   }
 }
 
-// Add event listener to the "deleteBtn" button
 const deleteBtn = document.querySelector('#deleteBtn');
 deleteBtn.addEventListener('click', deleteAccount);

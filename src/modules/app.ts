@@ -200,7 +200,7 @@ displayUserEmails(users);
     : (data.userImage == '/images/3.png')
       ? '3.5468cb7d.png'
       : ''}></img>
-          <p>${data.message}</p>
+          <p style="display:inline">${data.message}</p>
           <p>Posted by: ${data.userEmail}</p>
         `;
         messagesDiv.appendChild(messageDiv);

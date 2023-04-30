@@ -27,7 +27,7 @@ const login = async (email: string, password: string) => {
     console.log(auth.currentUser);
     const loggedAs = document.querySelector('#loggedIn');
     loggedAs.innerText = 'logged in as '+auth.currentUser?.email;
-    profilePicture = document.createElement('img');
+    const profilePicture = document.createElement('img');
     profilePicture.src = auth.currentUser?.photoURL;
     loggedAs.append(profilePicture);
 
@@ -150,7 +150,7 @@ const userIsSignedIn = async (user) => {
   console.log(auth.currentUser);
   const loggedAs = document.querySelector('#loggedIn');
   loggedAs.innerText = 'logged in as '+auth.currentUser?.email;
-  profilePicture = document.createElement('img');
+  const profilePicture = document.createElement('img');
   profilePicture.src = auth.currentUser?.photoURL;
   loggedAs.append(profilePicture);
 

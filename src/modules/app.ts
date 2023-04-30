@@ -11,6 +11,7 @@ const firebaseConfig = {
   appId: "1:1001432544500:web:732fd9906d025791f55aa1"
 };
 
+
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
@@ -198,7 +199,6 @@ displayUserEmails(users);
     }
   };
 
-  // Create post form
   const postForm = document.createElement('form');
   postForm.id = 'postForm';
   postForm.addEventListener('submit', (event) => {
@@ -346,7 +346,6 @@ async function deleteAccount() {
       await deleteUser(currentUser);
       console.log('User account deleted successfully.');
       location.reload();
-      // Perform any additional actions after the account is deleted
     } else {
       console.log('No user is currently logged in.');
     }

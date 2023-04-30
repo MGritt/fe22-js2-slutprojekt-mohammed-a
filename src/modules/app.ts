@@ -187,7 +187,7 @@ displayUserEmails(users);
         const messageDiv = document.createElement('div');
         messageDiv.classList.add('message');
         messageDiv.innerHTML = `
-        <img src=${'fe22-js2-slutprojekt-mohammed-a/'+data.userImage}></img>
+      <img src=${(data.userImage = 'images/1.png') ? '1.3d884485.png' : '' (data.userImage = 'images/2.png') ? '2.39edb27f.png' : '' (data.userImage = 'images/3.png') ? '3.5468cb7d' : ''}></img>
           <p>${data.message}</p>
           <p>Posted by: ${data.userEmail}</p>
         `;
@@ -314,7 +314,7 @@ const displayUserProfile = async (uid: string) => {
       const messageDiv = document.createElement('div');
       messageDiv.classList.add('message');
       messageDiv.innerHTML = `
-      <img src=${'fe22-js2-slutprojekt-mohammed-a/'+data.userImage}></img>
+      <img src=${(data.userImage = 'images/1.png') ? '1.3d884485.png' : '' (data.userImage = 'images/2.png') ? '2.39edb27f.png' : '' (data.userImage = 'images/3.png') ? '3.5468cb7d' : ''}></img>
         <p>${data.message}</p>
         <p>Posted by: ${data.userEmail}</p>
       `;

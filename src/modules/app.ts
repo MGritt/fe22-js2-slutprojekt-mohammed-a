@@ -143,7 +143,7 @@ const logout = async () => {
 };
 
 
-const userIsSignedIn = () => {
+const userIsSignedIn = async () => {
   const user: User = userCredential.user;
   console.log('logged in?');
   const loginWrapper = document.querySelector('#loginWrapper');

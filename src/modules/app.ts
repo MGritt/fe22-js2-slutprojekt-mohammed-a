@@ -143,8 +143,7 @@ const logout = async () => {
 };
 
 
-const userIsSignedIn = async () => {
-  const user: User = userCredential.user;
+const userIsSignedIn = async (user) => {
   console.log('logged in?');
   const loginWrapper = document.querySelector('#loginWrapper');
   loginWrapper.innerHTML = '';
@@ -239,7 +238,7 @@ displayUserEmails(users);
 
 auth.onAuthStateChanged((user) => {
   if (user) {
-    userIsSignedIn();
+    userIsSignedIn(user);
   }
 });
 

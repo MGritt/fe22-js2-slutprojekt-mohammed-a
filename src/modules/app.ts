@@ -151,7 +151,7 @@ const userIsSignedIn = async (user) => {
   const loggedAs = document.querySelector('#loggedIn');
   loggedAs.innerText = 'logged in as '+auth.currentUser?.email;
   const profilePicture = document.createElement('img');
-  profilePicture.src = auth.currentUser?.photoURL;
+  profilePicture.src = 'fe22-js2-slutprojekt-mohammed-a/'+auth.currentUser?.photoURL;
   loggedAs.append(profilePicture);
 
 const users = await loadAllUsers();
@@ -187,7 +187,7 @@ displayUserEmails(users);
         const messageDiv = document.createElement('div');
         messageDiv.classList.add('message');
         messageDiv.innerHTML = `
-        <img src=${data.userImage}></img>
+        <img src=${'fe22-js2-slutprojekt-mohammed-a/'+data.userImage}></img>
           <p>${data.message}</p>
           <p>Posted by: ${data.userEmail}</p>
         `;
@@ -314,7 +314,7 @@ const displayUserProfile = async (uid: string) => {
       const messageDiv = document.createElement('div');
       messageDiv.classList.add('message');
       messageDiv.innerHTML = `
-      <img src=${data.userImage}></img>
+      <img src=${'fe22-js2-slutprojekt-mohammed-a/'+data.userImage}></img>
         <p>${data.message}</p>
         <p>Posted by: ${data.userEmail}</p>
       `;
